@@ -8,8 +8,9 @@ namespace odepp {
 
 template <class Integrator, class Fn, class State, class... Args>
   requires std::is_invocable_r_v<State, Fn, RealType&, const State&, Args&&...>
-auto ode_solve(Integrator&& integrate, const RealType t0, const RealType t1,
-               const RealType dt, const State y0, Fn&& f, Args&&... args) {
+auto ode_solve(Integrator&& integrate, Fn&& f, const RealType t0,
+               const RealType t1, const RealType dt, const State y0,
+               Args&&... args) {
   using OutputType = std::pair<std::vector<RealType>, std::vector<State>>;
 
   auto t = t0;
@@ -18,7 +19,7 @@ auto ode_solve(Integrator&& integrate, const RealType t0, const RealType t1,
   auto output = OutputType{{t}, {y}};
   while (t < t1) {
     // Do we want one_step to update t?
-    y = integrate(t, dt, y, f, std::forward<Args>(args)...);
+    y = integrate(f, dt, t, y, std::forward<Args>(args)...);
     // We can add a check to determine if we want to log this timestep or not.
     output.first.emplace_back(t);
     output.second.emplace_back(y);
