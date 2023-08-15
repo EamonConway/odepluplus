@@ -5,19 +5,50 @@
 #include "odepp/integrators/forward_euler.hpp"
 #include "odepp/types.hpp"
 namespace odepp {
+/**
+ * @brief
+ *
+ * @tparam State
+ */
+template <class State>
+using ODEOutput = std::pair<std::vector<RealType>, std::vector<State>>;
 
-template <class Integrator, class Fn, class State, class... FnArgs>
-  requires std::is_invocable_r_v<State, Fn, RealType&, const State&,
-                                 FnArgs&&...>
+/**
+ * @brief
+ *
+ * @tparam Fn
+ * @tparam State
+ * @tparam FnArgs
+ */
+template <typename Fn, typename State, typename... FnArgs>
+concept ExplicitOdeFn =
+    std::is_invocable_r_v<State, Fn, RealType&, const State&, FnArgs&&...>;
+
+/**
+ * @brief
+ *
+ * @tparam Integrator
+ * @tparam State
+ * @tparam FnArgs
+ * @tparam Fn
+ * @param integrate
+ * @param f
+ * @param t0
+ * @param t1
+ * @param dt
+ * @param y0
+ * @param args
+ * @return ODEOutput<State>
+ */
+template <class Integrator, class State, class... FnArgs,
+          ExplicitOdeFn<State, FnArgs...> Fn>
 auto ode_solve(Integrator&& integrate, Fn&& f, const RealType t0,
                const RealType t1, const RealType dt, const State y0,
-               FnArgs&&... args) {
-  using OutputType = std::pair<std::vector<RealType>, std::vector<State>>;
-
+               FnArgs&&... args) -> ODEOutput<State> {
   auto t = t0;
   auto y = y0;
   // Create output with the initial timestep.
-  auto output = OutputType{{t}, {y}};
+  auto output = ODEOutput<State>{{t}, {y}};
   while (t < t1) {
     // Do we want one_step to update t?
     y = integrate(f, dt, t, y, std::forward<FnArgs>(args)...);
