@@ -43,7 +43,7 @@ concept ExplicitOdeFn =
 template <class Integrator, class State, class... FnArgs,
           ExplicitOdeFn<State, FnArgs...> Fn>
 auto ode_explicit_solve(Integrator&& integrate, Fn&& f, const RealType t0,
-                        const RealType t1, const RealType dt, const State y0,
+                        const RealType t1, const RealType dt, const State& y0,
                         FnArgs&&... args) -> ODEOutput<State> {
   auto t = t0;
   auto y = y0;
