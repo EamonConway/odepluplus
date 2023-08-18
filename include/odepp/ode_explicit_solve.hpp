@@ -14,8 +14,8 @@ template <class State>
 using ODEOutput = std::pair<std::vector<RealType>, std::vector<State>>;
 
 /**
- * @brief
- *
+ * @brief Explicit Ordinary differential equations must be invocable in the form
+ * of f(t,y,arguments) and return a type that is equivalent to the type of y.
  * @tparam Fn
  * @tparam State
  * @tparam FnArgs
