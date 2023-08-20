@@ -2,7 +2,6 @@
 #define ODEPP_ODE_SOLVE_HPP
 #include <type_traits>
 
-#include "odepp/integrators/forward_euler.hpp"
 #include "odepp/types.hpp"
 namespace odepp {
 /**
