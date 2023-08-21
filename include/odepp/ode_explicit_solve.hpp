@@ -21,7 +21,7 @@ using ODEOutput = std::pair<std::vector<RealType>, std::vector<State>>;
  */
 template <typename Fn, typename State, typename... FnArgs>
 concept ExplicitOdeFn =
-    std::is_invocable_r_v<State, Fn, RealType&, const State&, FnArgs&&...>;
+    std::is_invocable_r_v<State, Fn, const RealType, const State&, FnArgs&&...>;
 
 /**
  * @brief
