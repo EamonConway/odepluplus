@@ -10,7 +10,7 @@ namespace odepp {
  * @tparam State
  */
 template <class State>
-using ODEOutput = std::pair<std::vector<RealType>, std::vector<State>>;
+using OdeOutput = std::pair<std::vector<RealType>, std::vector<State>>;
 
 /**
  * @brief Explicit Ordinary differential equations must be invocable in the form
@@ -43,11 +43,11 @@ template <class Integrator, class State, class... FnArgs,
           ExplicitOdeFn<State, FnArgs...> Fn>
 auto ode_explicit_solve(Integrator&& integrate, Fn&& f, const RealType t0,
                         const RealType t1, const RealType dt, const State& y0,
-                        FnArgs&&... args) -> ODEOutput<State> {
+                        FnArgs&&... args) -> OdeOutput<State> {
   auto t = t0;
   auto y = y0;
   // Create output with the initial timestep.
-  auto output = ODEOutput<State>{{t}, {y}};
+  auto output = OdeOutput<State>{{t}, {y}};
   while (t < t1) {
     // Do we want one_step to update t?
     y = integrate(f, dt, t, y, std::forward<FnArgs>(args)...);
