@@ -24,12 +24,26 @@ concept ExplicitOdeFn =
     std::is_invocable_r_v<State, Fn, const RealType, const State&, FnArgs&&...>;
 
 /**
+ * @brief Explicit Ordinary differential equations must be solved using an
+ * explicit integrator.
+ *
+ * @tparam Fn
+ * @tparam State
+ * @tparam FnArgs
+ */
+template <typename Integrator, typename Fn, typename State, typename... FnArgs>
+concept ExplicitIntegrator =
+    std::is_invocable_r_v<State, Integrator, Fn, const RealType, RealType&,
+                          const State&, FnArgs&&...>;
+
+/**
  * @brief
  *
  * @tparam Integrator
  * @tparam State
  * @tparam FnArgs
  * @tparam Fn
+ * @tparam Integrator
  * @param integrate
  * @param f
  * @param t0
@@ -37,13 +51,13 @@ concept ExplicitOdeFn =
  * @param dt
  * @param y0
  * @param args
- * @return ODEOutput<State>
+ * @return OdeOutput<State>
  */
-template <class Integrator, class State, class... FnArgs,
-          ExplicitOdeFn<State, FnArgs...> Fn>
-auto ode_explicit_solve(Integrator&& integrate, Fn&& f, const RealType t0,
-                        const RealType t1, const RealType dt, const State& y0,
-                        FnArgs&&... args) -> OdeOutput<State> {
+template <class State, class... FnArgs, ExplicitOdeFn<State, FnArgs...> Fn,
+          ExplicitIntegrator<Fn, State, FnArgs...> Integrator>
+auto ode_solve(Integrator&& integrate, Fn&& f, const RealType t0,
+               const RealType t1, const RealType dt, const State& y0,
+               FnArgs&&... args) -> OdeOutput<State> {
   auto t = t0;
   auto y = y0;
   // Create output with the initial timestep.
