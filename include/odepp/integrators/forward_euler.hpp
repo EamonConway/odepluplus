@@ -6,8 +6,8 @@ namespace integrator {
 struct forward_euler_fn {
  public:
   template <class State, class Fn, class... FnArgs>
-  State operator()(Fn&& f, const RealType dt, RealType& t, const State& y0,
-                   FnArgs&&... args) const {
+  State operator()(Fn &&f, const RealType dt, RealType &t, const State &y0,
+                   FnArgs &&...args) const {
     auto y = y0;
     auto fn = f(t, y, std::forward<FnArgs>(args)...);
 
