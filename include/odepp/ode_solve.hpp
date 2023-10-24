@@ -115,7 +115,7 @@ concept ImplicitIntegrator =
  * @return OdeOutput<State>
  */
 template <class State, class... FnArgs, ImplicitOdeFn<State, FnArgs...> Fn,
-          ImplicitIntegrator<State, FnArgs...> Integrator>
+          ImplicitIntegrator<Fn, State, FnArgs...> Integrator>
 auto ode_solve(Integrator&& integrate, Fn&& f, const RealType t0,
                const RealType t1, const RealType dt, const State& y0,
                const State& yp0, FnArgs&&... args) -> OdeOutput<State> {
