@@ -1,10 +1,11 @@
 #ifndef ODEPP_INTEGRATORS_FE_HPP
 #define ODEPP_INTEGRATORS_FE_HPP
 #include "odepp/types.hpp"
+#include <utility>
 namespace odepp {
 namespace integrator {
 struct forward_euler_fn {
- public:
+public:
   template <class State, class Fn, class... FnArgs>
   State operator()(Fn &&f, const RealType dt, RealType &t, const State &y0,
                    FnArgs &&...args) const {
@@ -24,6 +25,6 @@ struct forward_euler_fn {
 };
 
 inline constexpr forward_euler_fn forward_euler{};
-}  // namespace integrator
-}  // namespace odepp
+} // namespace integrator
+} // namespace odepp
 #endif
