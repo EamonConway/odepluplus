@@ -61,9 +61,10 @@ concept ExplicitIntegrator =
  */
 template <MathVector State, class... FnArgs, ExplicitOdeFn<State, FnArgs...> Fn,
           ExplicitIntegrator<Fn, State, FnArgs...> Integrator>
-auto ode_solve(Integrator &&integrate, Fn &&f, const RealType t0,
-               const RealType t1, const RealType dt, const State &y0,
-               FnArgs &&...args) -> OdeOutput<State> {
+[[nodiscard("Cannot ignore ODE solution")]] auto
+ode_solve(Integrator &&integrate, Fn &&f, const RealType t0, const RealType t1,
+          const RealType dt, const State &y0, FnArgs &&...args)
+    -> OdeOutput<State> {
   auto t = t0;
   auto y = y0;
   // Create output with the initial timestep.
@@ -79,8 +80,9 @@ auto ode_solve(Integrator &&integrate, Fn &&f, const RealType t0,
 }
 
 /**
- * @brief Implicit Ordinary differential equations must be invocable in the form
- * of f(t,y,yp,arguments) and return a type that is equivalent to the type of y.
+ * @brief Implicit Ordinary differential equations must be invocable in
+ * the form of f(t,y,yp,arguments) and return a type that is equivalent
+ * to the type of y.
  *
  * @tparam Fn
  * @tparam State
@@ -123,9 +125,10 @@ concept ImplicitIntegrator =
  */
 template <MathVector State, class... FnArgs, ImplicitOdeFn<State, FnArgs...> Fn,
           ImplicitIntegrator<Fn, State, FnArgs...> Integrator>
-auto ode_solve(Integrator &&integrate, Fn &&f, const RealType t0,
-               const RealType t1, const RealType dt, const State &y0,
-               const State &yp0, FnArgs &&...args) -> OdeOutput<State> {
+[[nodiscard("Cannot ignore ODE solution")]] auto
+ode_solve(Integrator &&integrate, Fn &&f, const RealType t0, const RealType t1,
+          const RealType dt, const State &y0, const State &yp0,
+          FnArgs &&...args) -> OdeOutput<State> {
   auto t = t0;
   auto y = y0;
   auto yp = yp0;
